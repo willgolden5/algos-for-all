@@ -230,10 +230,10 @@ const NAV_ITEMS: Array<NavItem> = [
   },
   {
     label: 'How it Works',
-    href: '#',
+    href: '/how-it-works',
   },
   {
     label: 'Who We Are',
-    href: '#',
+    href: 'who-we-are',
   },
 ];
