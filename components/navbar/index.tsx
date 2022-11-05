@@ -16,6 +16,28 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
+interface NavItem {
+  label: string;
+  subLabel?: string;
+  children?: Array<NavItem>;
+  href?: string;
+}
+
+const NAV_ITEMS: Array<NavItem> = [
+  {
+    label: 'Trading Algorithms',
+    href: '#',
+  },
+  {
+    label: 'How it Works',
+    href: '/how-it-works',
+  },
+  {
+    label: 'Who We Are',
+    href: 'who-we-are',
+  },
+];
+
 export default function NavBar() {
   const { isOpen, onToggle } = useDisclosure();
 
@@ -215,25 +237,3 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
     </Stack>
   );
 };
-
-interface NavItem {
-  label: string;
-  subLabel?: string;
-  children?: Array<NavItem>;
-  href?: string;
-}
-
-const NAV_ITEMS: Array<NavItem> = [
-  {
-    label: 'Trading Algorithms',
-    href: '#',
-  },
-  {
-    label: 'How it Works',
-    href: '/how-it-works',
-  },
-  {
-    label: 'Who We Are',
-    href: 'who-we-are',
-  },
-];
