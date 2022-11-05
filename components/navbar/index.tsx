@@ -42,8 +42,10 @@ export default function NavBar() {
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
           <Text
+            as={'a'}
             textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
             fontFamily={'heading'}
+            href='/'
             color={useColorModeValue('gray.800', 'white')}
           >
             Algos for All
