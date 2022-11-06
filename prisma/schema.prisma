@@ -2,6 +2,7 @@ generator client {
   provider = "prisma-client-js"
   previewFeatures = ["referentialIntegrity"]
 }
+
 datasource db {
   provider = "mysql"
   url = env("DATABASE_URL")
@@ -9,11 +10,18 @@ datasource db {
 }
 
 model user {
-  id             Int    @id @default(autoincrement())
-  first          String @db.VarChar(255)
-  last           String @db.VarChar(255)
-  email          String @db.VarChar(255)
-  phone          String @db.VarChar(255)
+  id              Int       @default(autoincrement()) @id
+  first_name      String    @db.VarChar(255)
+  last_name       String    @db.VarChar(255)
+  email           String    @db.VarChar(255)
+  phone           String    @db.VarChar(255)
+  password        String    @db.VarChar(255)
+}
 
-  @@map("user")
+model mailing_list {
+  id              Int       @default(autoincrement()) @id
+  first_name      String    @db.VarChar(255)
+  last_name       String    @db.VarChar(255)
+  email           String    @db.VarChar(255)
+  phone           String    @db.VarChar(255)
 }

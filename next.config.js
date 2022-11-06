@@ -1,4 +1,4 @@
-import { env } from './src/env/server.js';
+/** @type {import('next').NextConfig} */
 
 /**
  * Don't be scared of the generics here.
@@ -8,11 +8,10 @@ import { env } from './src/env/server.js';
  * @param {T} config - A generic parameter that flows through to the return type
  * @constraint {{import('next').NextConfig}}
  */
-function defineNextConfig(config) {
-  return config;
-}
 
-export default defineNextConfig({
+const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-});
+};
+
+module.exports = nextConfig;
