@@ -11,7 +11,7 @@ const Login = () => {
           <FormLabel>Password</FormLabel>
           <Input placeholder='******' variant='filled' mb={6} type='password' />
         </FormControl>
-        <Button colorScheme='teal' type='submit'>
+        <Button colorScheme='teal' type='submit' w='100%'>
           Log in
         </Button>
       </Flex>

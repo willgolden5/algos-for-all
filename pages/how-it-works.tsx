@@ -6,7 +6,7 @@ const HowItWorks = () => {
       <Heading>Coming Soon...</Heading>
       <Text mb={6}>Sign up to be notified when we go live!</Text>
       <Flex direction='column' w='20%'>
-        <Button as='a' colorScheme='teal' type='submit' href='/signup'>
+        <Button as='a' colorScheme='teal' type='submit' href='/signup' w='100%'>
           Get Notified
         </Button>
       </Flex>
