@@ -25,8 +25,8 @@ interface NavItem {
 
 const NAV_ITEMS: Array<NavItem> = [
   {
-    label: 'Trading Algorithms',
-    href: '#',
+    label: 'Trading Algori≈thms',
+    href: '/trading-algorithms',
   },
   {
     label: 'How it Works',
