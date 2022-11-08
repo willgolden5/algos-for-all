@@ -13,8 +13,8 @@ model user {
   id              Int       @default(autoincrement()) @id
   first_name      String    @db.VarChar(255)
   last_name       String    @db.VarChar(255)
-  email           String    @db.VarChar(255)
-  phone           String    @db.VarChar(255)
+  email           String    @unique @db.VarChar(255)
+  phone           String    @unique @db.VarChar(255)
   password        String    @db.VarChar(255)
 }
 
@@ -22,6 +22,15 @@ model mailing_list {
   id              Int       @default(autoincrement()) @id
   first_name      String    @db.VarChar(255)
   last_name       String    @db.VarChar(255)
-  email           String    @db.VarChar(255)
-  phone           String    @db.VarChar(255)
+  email           String    @unique @db.VarChar(255)
+  phone           String    @unique @db.VarChar(255)
+}
+
+model algorithms {
+  id           Int      @id @default(autoincrement())
+  name         String   @unique @db.VarChar(255)
+  description  String   @db.VarChar(255)
+  day_trading  Boolean  @map("day-trading")
+  day_value    String?  @map("day-value") @db.VarChar(255)
+  sharpe_ratio String?  @map("sharpe-ratio") @db.VarChar(255)
 }

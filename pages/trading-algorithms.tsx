@@ -20,4 +20,3 @@ const TradingAlgorithms = () => {
 };
 
 export default TradingAlgorithms;
-ßßß;
