@@ -1,8 +1,9 @@
 'use client';
-import { Button, Flex, FormControl, FormLabel, Heading, Input, Text } from '@chakra-ui/react';
+import { Button, Flex, FormControl, FormLabel, Heading, Input, Text, useToast } from '@chakra-ui/react';
 import { useState } from 'react';
 
 const SignUp = () => {
+  const toast = useToast();
   const [formState, setFormState] = useState({
     email: '',
     lastName: '',
@@ -10,12 +11,35 @@ const SignUp = () => {
     phone: '',
   });
 
-  const submitForm = () => {
-    console.log(JSON.stringify(formState));
-    fetch('/api/mailing-list-create', {
+  const submitForm = async () => {
+    const res = await fetch('/api/mailing-list-create', {
       method: 'POST',
       body: JSON.stringify(formState),
     });
+    const data = await res.json();
+    if (data.error) {
+      toast({
+        title: 'Error',
+        description: data.error,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    } else {
+      setFormState({
+        email: '',
+        lastName: '',
+        firstName: '',
+        phone: '',
+      });
+      toast({
+        title: 'Success',
+        description: 'You will be notified when we go live!',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
   return (
     <Flex h='100%' alignItems='center' justifyContent='center'>
@@ -29,6 +53,7 @@ const SignUp = () => {
               placeholder='John'
               variant='filled'
               mb={3}
+              value={formState.firstName}
               onChange={(e) => setFormState({ ...formState, firstName: e.target.value })}
             />
           </FormControl>
@@ -38,6 +63,7 @@ const SignUp = () => {
               placeholder='Smith'
               variant='filled'
               mb={6}
+              value={formState.lastName}
               onChange={(e) => setFormState({ ...formState, lastName: e.target.value })}
             />
           </FormControl>
@@ -50,6 +76,7 @@ const SignUp = () => {
               variant='filled'
               mb={6}
               type='email'
+              value={formState.email}
               onChange={(e) => setFormState({ ...formState, email: e.target.value })}
             />
           </FormControl>
@@ -60,6 +87,7 @@ const SignUp = () => {
               variant='filled'
               mb={6}
               type='phone'
+              value={formState.phone}
               onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
             />
           </FormControl>

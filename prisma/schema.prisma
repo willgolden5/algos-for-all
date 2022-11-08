@@ -1,36 +1,35 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
   provider = "mysql"
-  url = env("DATABASE_URL")
-  referentialIntegrity = "prisma"
+  url      = env("DATABASE_URL")
 }
 
 model user {
-  id              Int       @default(autoincrement()) @id
-  first_name      String    @db.VarChar(255)
-  last_name       String    @db.VarChar(255)
-  email           String    @unique @db.VarChar(255)
-  phone           String    @unique @db.VarChar(255)
-  password        String    @db.VarChar(255)
+  id         Int    @id @default(autoincrement())
+  first_name String @db.VarChar(255)
+  last_name  String @db.VarChar(255)
+  email      String @unique @db.VarChar(255)
+  phone      String @unique @db.VarChar(255)
+  password   String @db.VarChar(255)
 }
 
 model mailing_list {
-  id              Int       @default(autoincrement()) @id
-  first_name      String    @db.VarChar(255)
-  last_name       String    @db.VarChar(255)
-  email           String    @unique @db.VarChar(255)
-  phone           String    @unique @db.VarChar(255)
+  id         Int    @id @default(autoincrement())
+  first_name String @db.VarChar(255)
+  last_name  String @db.VarChar(255)
+  email      String @unique @db.VarChar(255)
+  phone      String @unique @db.VarChar(255)
 }
 
 model algorithms {
-  id           Int      @id @default(autoincrement())
-  name         String   @unique @db.VarChar(255)
-  description  String   @db.VarChar(255)
-  day_trading  Boolean  @map("day-trading")
-  day_value    String?  @map("day-value") @db.VarChar(255)
-  sharpe_ratio String?  @map("sharpe-ratio") @db.VarChar(255)
+  id           Int     @id @default(autoincrement())
+  name         String  @unique @db.VarChar(255)
+  description  String  @db.VarChar(255)
+  day_trading  Boolean @map("day-trading")
+  day_value    String? @map("day-value") @db.VarChar(255)
+  sharpe_ratio String? @map("sharpe-ratio") @db.VarChar(255)
 }
