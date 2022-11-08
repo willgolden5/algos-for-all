@@ -15,6 +15,10 @@ const SignUp = () => {
     const res = await fetch('/api/mailing-list-create', {
       method: 'POST',
       body: JSON.stringify(formState),
+      headers: {
+        'access-control-allow-origin': '*',
+        'access-control-allow-credentials': 'true',
+      },
     });
     const data = await res.json();
     if (data.error) {
