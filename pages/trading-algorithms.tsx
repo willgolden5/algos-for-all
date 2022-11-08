@@ -3,7 +3,6 @@ import { Button, Flex, Heading, Text } from '@chakra-ui/react';
 //this page should show the trading algorithms that we have available to trade with
 
 // TODO:
-// 1. Create algorithms table in pscale with columns: id, name, description, price, sharpe, and image
 
 const TradingAlgorithms = () => {
   return (
