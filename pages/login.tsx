@@ -11,7 +11,7 @@ const Login = () => {
   const onSubmit = () => {
     toast({
       title: 'Error',
-      description: 'This feature is not yet implemented',
+      description: 'Incorrect email or password',
       status: 'error',
       duration: 3000,
       isClosable: true,
