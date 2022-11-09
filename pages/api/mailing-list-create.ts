@@ -15,22 +15,24 @@ export default async function handle(
 ) {
   const body = await JSON.parse(req.body);
   const { email, firstName, lastName, phone } = schema.parse(body);
-  const alreadyExists = await prisma.mailing_list.findFirst({
+  // check if the entry already exists in the mailing_list table with prisma. If it does, return an error. If it doesn't, create the entry.
+  const existingEntry = await prisma.mailing_list.findUnique({
     where: {
-      email,
+      email: email,
     },
-  })
-  if (alreadyExists) {
-    res.status(400).json({ error: "Email already exists" });
-    return;
-  }
-  const result = await prisma.mailing_list.create({
+  });
+  if (existingEntry) {
+    res.status(400).json({ message: "already exists" });
+  } else {
+  await prisma.mailing_list.create({
     data: {
-    first_name: firstName,
-    last_name: lastName,
-    email: email,
-    phone: phone,
+      email: email,
+      first_name: firstName,
+      last_name: lastName,
+      phone: phone,
+    },
+  });
+
+  res.status(200).json({ message: "success" });
 }
-});
-  return res.json(result);
-}
+};

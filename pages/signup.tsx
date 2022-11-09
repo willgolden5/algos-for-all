@@ -12,19 +12,16 @@ const SignUp = () => {
   });
 
   const submitForm = async () => {
-    const res = await fetch('/api/mailing-list-create', {
+    const data = await fetch('/api/mailing-list-create', {
       method: 'POST',
       body: JSON.stringify(formState),
-      headers: {
-        'access-control-allow-origin': '*',
-        'access-control-allow-credentials': 'true',
-      },
     });
-    const data = await res.json();
-    if (data.error) {
+    const res = await data.json();
+    console.log(res);
+    if (res.message === 'already exists') {
       toast({
         title: 'Error',
-        description: data.error,
+        description: 'There was an error adding you to the mailing list.',
         status: 'error',
         duration: 3000,
         isClosable: true,
