@@ -10,7 +10,7 @@ const Login = () => {
 
   const onSubmit = () => {
     //testing start top of algo
-    fetch('/api/start', {
+    fetch('/api/login', {
       method: 'POST',
       body: JSON.stringify(formState),
     });

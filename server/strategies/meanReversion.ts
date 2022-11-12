@@ -1,5 +1,5 @@
 import { awaitMarketOpen, alpaca, getCurrentTime, getTimeToClose, submitOrder, getOpenTime, submitLimitOrder, getAccount, cancelExistingOrders } from "../alpaca";
-import  { Calendar, BarsTimeframe, PageOfBars, CancelOrder, Bar } from "@master-chief/alpaca";
+import  { Calendar, PageOfBars, CancelOrder, Bar } from "@master-chief/alpaca";
 
 
 const MINUTE = 60000
@@ -162,4 +162,3 @@ const rebalance = async (symbol: string) => {
             console.log("Position already exists");
         }
     }
-}
