@@ -1,26 +1,16 @@
-import { AlpacaClient } from '@master-chief/alpaca';
 import { OrderSide } from "@master-chief/alpaca/@types/entities";
+import {  AlpacaClient } from "@master-chief/alpaca";
 
-const options = {
-    credentials: {
-    key: process.env.ALPACA_API_KEY as string,
-    secret: process.env.ALPACA_API_SECRET as string,
-    paper: true,
-},
-    rateLimit: true,
-};
-
-export const alpaca = new AlpacaClient(options);
 const MINUTE = 60000
 
 //get account info
-export const getAccount = async () => {
+export const getAccount = async (alpaca: AlpacaClient) => {
     const account = await alpaca.getAccount()
     return account;
 };
 
 //wait for market to open
-export const awaitMarketOpen = async () => {
+export const awaitMarketOpen = async (alpaca: AlpacaClient) => {
     let timeToClose = 0;
     return new Promise<void>(resolve => {
         const check = async () => {
@@ -30,8 +20,8 @@ export const awaitMarketOpen = async () => {
                     resolve();
                 }
                 else {
-                    const openTime = await getOpenTime();
-                    const currTime = await getCurrentTime();
+                    const openTime = await getOpenTime(alpaca);
+                    const currTime = await getCurrentTime(alpaca);
 
                     timeToClose = Math.floor((openTime - currTime) / 1000 / 60)
                     let timeString = (numberToHourMinutes(timeToClose) + ' until market open.');
@@ -55,7 +45,7 @@ const numberToHourMinutes = (number: number): string => {
   }
 
 // Submit an order if quantity is above 0.
-export const submitOrder = async (symbol: string, quantity: number, side: OrderSide) => {
+export const submitOrder = async (symbol: string, quantity: number, side: OrderSide, alpaca: AlpacaClient) => {
     if(quantity > 0) {
     try {
     const order = await alpaca.placeOrder({
@@ -75,7 +65,7 @@ export const submitOrder = async (symbol: string, quantity: number, side: OrderS
 };
 
 // submit a limit order if quantity is above 0
-export const submitLimitOrder = async (symbol: string, quantity: number, side: OrderSide, limitPrice: number) => {
+export const submitLimitOrder = async (symbol: string, quantity: number, side: OrderSide, limitPrice: number, alpaca: AlpacaClient) => {
     if(quantity > 0) {
     try {
     const order = await alpaca.placeOrder({
@@ -96,32 +86,32 @@ export const submitLimitOrder = async (symbol: string, quantity: number, side: O
 }
 
 //get market open time
-export const getOpenTime = async () => {
+export const getOpenTime = async (alpaca: AlpacaClient) => {
     const clock = await alpaca.getClock();
     return new Date(clock.next_open.toString().substring(0, clock.next_close.toString().length - 6)).getTime();
 }
 
 //get market close time
-export const getCloseTime = async () => {
+export const getCloseTime = async (alpaca: AlpacaClient) => {
     const clock = await alpaca.getClock();
     return new Date(clock.next_close.toString().substring(0, clock.next_close.toString().length - 6)).getTime();
 };
 
 //get current time
-export const getCurrentTime = async () => {
+export const getCurrentTime = async (alpaca: AlpacaClient) => {
     const clock = await alpaca.getClock();
     return new Date(clock.timestamp.toString().substring(0, clock.timestamp.toString().length - 6)).getTime();
 };
 
 //get time to market close
-export const getTimeToClose = async () => {
-    const closingTime = await getCloseTime();
-    const currentTime = await getCurrentTime();
+export const getTimeToClose = async (alpaca: AlpacaClient) => {
+    const closingTime = await getCloseTime(alpaca);
+    const currentTime = await getCurrentTime(alpaca);
     return Math.abs(closingTime - currentTime)
 };
 
 //get all open orders
-export const getOpenOrders = async () => {
+export const getOpenOrders = async (alpaca: AlpacaClient) => {
     const orders = await alpaca.getOrders({
         status: 'open',
     });
@@ -129,7 +119,7 @@ export const getOpenOrders = async () => {
 };
 
 //cancel all existing orders
-export const cancelExistingOrders = async () => {
+export const cancelExistingOrders = async (alpaca: AlpacaClient) => {
     let orders;
     try {
         orders = await alpaca.getOrders({

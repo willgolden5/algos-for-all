@@ -1,5 +1,13 @@
-import { awaitMarketOpen, alpaca, getCurrentTime, getTimeToClose, submitOrder, getOpenTime, submitLimitOrder, getAccount, cancelExistingOrders } from "../alpaca";
-import  { Calendar, PageOfBars, CancelOrder, Bar } from "@master-chief/alpaca";
+import { 
+    awaitMarketOpen, 
+    getCurrentTime, 
+    getTimeToClose, 
+    submitOrder, 
+    getOpenTime, 
+    submitLimitOrder, 
+    getAccount, 
+    cancelExistingOrders } from "../alpaca";
+import  { Calendar, PageOfBars, CancelOrder, Bar, AlpacaClient } from "@master-chief/alpaca";
 
 
 const MINUTE = 60000
@@ -7,23 +15,23 @@ const TWENTY_MINUTES = 20
 let lastOrder: CancelOrder | undefined = undefined;
 
 //simple mean reversion algorithm using the alpaca api
-export const runMeanReversion = async (symbol: string) => {
+export const runMeanReversion = async (symbol: string, alpaca: AlpacaClient) => {
     console.log("Waiting for market to open...");
-    await cancelExistingOrders();
-    await awaitMarketOpen();
+    await cancelExistingOrders(alpaca);
+    await awaitMarketOpen(alpaca);
     console.log("Market Opened.");
     console.log(`Running Mean Reversion Algorithm on ${symbol}`);
-    await getAvgPricesOverLastXMinutes(TWENTY_MINUTES, symbol)
+    await getAvgPricesOverLastXMinutes(TWENTY_MINUTES, symbol, alpaca)
 };
 
 // get the running average of prices over the last x minutes, waiting until we have 20 bars from the market open.
-const getAvgPricesOverLastXMinutes = async (minutes: number, symbol: string) => {
+const getAvgPricesOverLastXMinutes = async (minutes: number, symbol: string, alpaca: AlpacaClient) => {
     const barsPromise = new Promise(resolve => {
         const barChecker = setInterval(async () => {
             await alpaca.getCalendar().then(async (res) => {
                 const open = res && res[0] as Calendar;
                 const marketOpen = new Date(open.open);
-                const currTime = await getCurrentTime();
+                const currTime = await getCurrentTime(alpaca);
                 const barsRes = alpaca.getBars({
                     symbol: symbol,
                     start: marketOpen,
@@ -47,7 +55,7 @@ const getAvgPricesOverLastXMinutes = async (minutes: number, symbol: string) => 
         }
 
         const INTERVAL = 15 // minutes
-        const timeToClose = await getTimeToClose();
+        const timeToClose = await getTimeToClose(alpaca);
         if(timeToClose < MINUTE * INTERVAL) {
             console.log("Market closing soon.  Closing positions.");
             try{
@@ -58,6 +66,7 @@ const getAvgPricesOverLastXMinutes = async (minutes: number, symbol: string) => 
                         symbol,
                         quantity,
                         'sell',
+                        alpaca
                     )
                     .catch((err) => console.log(err, "Error closing positions"));
                 });
@@ -68,15 +77,15 @@ const getAvgPricesOverLastXMinutes = async (minutes: number, symbol: string) => 
             console.log("Sleeping until market close (15 minutes).");
             setTimeout(() => {
                 // Run script again after market close for next trading day.
-                runMeanReversion(symbol)
+                runMeanReversion(symbol, alpaca)
               }, 60000 * 15)
         } else {
-            await rebalance(symbol)
+            await rebalance(symbol, alpaca)
         }
     }, MINUTE);
 };
 
-const rebalance = async (symbol: string) => {
+const rebalance = async (symbol: string, alpaca: AlpacaClient) => {
     let positionQuantity: number = 0;
     let positionValue: number | null = 0;
     let runningAverage: number = 0; 
@@ -90,8 +99,8 @@ const rebalance = async (symbol: string) => {
     } catch (err) {
         console.log(err);
     }
-    const marketOpen = await getOpenTime();
-    const currTime = await getCurrentTime();
+    const marketOpen = await getOpenTime(alpaca);
+    const currTime = await getCurrentTime(alpaca);
     // get the new updated price and running average.
     const bars = await alpaca.getBars({
         symbol: symbol,
@@ -115,7 +124,8 @@ const rebalance = async (symbol: string) => {
                 symbol,
                 positionQuantity,
                 'sell',
-                currPrice
+                currPrice,
+                alpaca
             )
             .catch((err) => console.log(err));
         } else {
@@ -126,7 +136,7 @@ const rebalance = async (symbol: string) => {
         let buyingPower;
         let portfolioValue = 0;
 
-        await getAccount()
+        await getAccount(alpaca)
                 .then(account => {
                     portfolioValue = account.portfolio_value;
                     buyingPower = account.buying_power;
@@ -146,7 +156,8 @@ const rebalance = async (symbol: string) => {
                 symbol,
                 quantityToBuy,
                 'buy',
-                currPrice
+                currPrice,
+                alpaca
             )
             lastOrder = order && {order_id: order.id};
         } else {
@@ -155,7 +166,7 @@ const rebalance = async (symbol: string) => {
             if(quantityToSell > positionQuantity) {
                 quantityToSell = positionQuantity;
             }
-            const order = await submitLimitOrder(symbol, quantityToSell, 'sell', currPrice);
+            const order = await submitLimitOrder(symbol, quantityToSell, 'sell', currPrice, alpaca);
             lastOrder = order && {order_id: order.id};
         }
         } else {
