@@ -8,11 +8,47 @@ const options = {
     paper: true,
   };
 const alpaca = new Alpaca(options);
+const MINUTE = 60000
 
 export const getAccount = async () => {
     const account = await alpaca.getAccount()
     return account;
 };
+
+//wait for market to open
+export const awaitMarketOpen = async () => {
+    let timeToClose = 0;
+    return new Promise<void>(resolve => {
+        const check = async () => {
+            try {
+                const clock = await alpaca.getClock();
+                if (clock.is_open) {
+                    resolve();
+                }
+                else {
+                    const openTime = await getOpenTime();
+                    const currTime = await getCurrentTime();
+
+                    timeToClose = Math.floor((openTime - currTime) / 1000 / 60)
+                    let timeString = (numberToHourMinutes(timeToClose) + ' until market open.');
+                    console.log(timeString);
+                    setTimeout(check, MINUTE);
+                }
+            } catch (err) {
+                console.log(err);
+            }
+        };
+        check();
+    })
+};
+
+const numberToHourMinutes = (number: number): string => {
+    const hours = number / 60
+    const realHours = Math.floor(hours)
+    const minutes = (hours - realHours) * 60
+    const realMinutes = Math.round(minutes)
+    return realHours + ' hour(s) and ' + realMinutes + ' minute(s)'
+  }
 
 // Submit an order if quantity is above 0.
 export const submitOrder = async (symbol: string, quantity: number, side: string) => {
