@@ -80,6 +80,14 @@ export const getTimeToClose = async () => {
     return Math.abs(closingTime - currentTime)
 };
 
+//get all open orders
+export const getOpenOrders = async () => {
+    const orders = await alpaca.getOrders({
+        status: 'open',
+    });
+    return orders;
+};
+
 //cancel all existing orders
 export const cancelExistingOrders = async () => {
     let orders: Order[];
