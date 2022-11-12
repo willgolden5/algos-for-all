@@ -1,15 +1,19 @@
-import { Order } from "./types";
-
-const Alpaca = require("@alpacahq/alpaca-trade-api");
+import { AlpacaClient } from '@master-chief/alpaca';
+import { OrderSide } from "@master-chief/alpaca/@types/entities";
 
 const options = {
-    keyId: process.env.ALPACA_API_KEY,
-    secretKey: process.env.ALPACA_API_SECRET,
+    credentials: {
+    key: process.env.ALPACA_API_KEY as string,
+    secret: process.env.ALPACA_API_SECRET as string,
     paper: true,
-  };
-const alpaca = new Alpaca(options);
+},
+    rateLimit: true,
+};
+
+export const alpaca = new AlpacaClient(options);
 const MINUTE = 60000
 
+//get account info
 export const getAccount = async () => {
     const account = await alpaca.getAccount()
     return account;
@@ -51,10 +55,10 @@ const numberToHourMinutes = (number: number): string => {
   }
 
 // Submit an order if quantity is above 0.
-export const submitOrder = async (symbol: string, quantity: number, side: string) => {
+export const submitOrder = async (symbol: string, quantity: number, side: OrderSide) => {
     if(quantity > 0) {
     try {
-    const order = await alpaca.createOrder({
+    const order = await alpaca.placeOrder({
         symbol: symbol,
         qty: quantity,
         side: side,
@@ -71,10 +75,10 @@ export const submitOrder = async (symbol: string, quantity: number, side: string
 };
 
 // submit a limit order if quantity is above 0
-export const submitLimitOrder = async (symbol: string, quantity: number, side: string, limitPrice: number) => {
+export const submitLimitOrder = async (symbol: string, quantity: number, side: OrderSide, limitPrice: number) => {
     if(quantity > 0) {
     try {
-    const order = await alpaca.createOrder({
+    const order = await alpaca.placeOrder({
         symbol: symbol,
         qty: quantity,
         side: side,
@@ -94,19 +98,19 @@ export const submitLimitOrder = async (symbol: string, quantity: number, side: s
 //get market open time
 export const getOpenTime = async () => {
     const clock = await alpaca.getClock();
-    return new Date(clock.next_open.substring(0, clock.next_close.length - 6)).getTime();
+    return new Date(clock.next_open.toString().substring(0, clock.next_close.toString().length - 6)).getTime();
 }
 
 //get market close time
 export const getCloseTime = async () => {
     const clock = await alpaca.getClock();
-    return new Date(clock.next_close.substring(0, clock.next_close.length - 6)).getTime();
+    return new Date(clock.next_close.toString().substring(0, clock.next_close.toString().length - 6)).getTime();
 };
 
 //get current time
 export const getCurrentTime = async () => {
     const clock = await alpaca.getClock();
-    return new Date(clock.timestamp.substring(0, clock.timestamp.length - 6)).getTime();
+    return new Date(clock.timestamp.toString().substring(0, clock.timestamp.toString().length - 6)).getTime();
 };
 
 //get time to market close
@@ -126,7 +130,7 @@ export const getOpenOrders = async () => {
 
 //cancel all existing orders
 export const cancelExistingOrders = async () => {
-    let orders: Order[];
+    let orders;
     try {
         orders = await alpaca.getOrders({
             status: 'open',
@@ -135,7 +139,10 @@ export const cancelExistingOrders = async () => {
         if(orders.length > 0) {
             try{
             orders.map(order => {
-                return alpaca.cancelOrder(order.id);
+                const cancelParams = {
+                    order_id: order.id,
+                };
+                return alpaca.cancelOrder(cancelParams);
             })
             } catch (err) {
                 console.log(err);
