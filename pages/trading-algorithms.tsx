@@ -49,7 +49,7 @@ const TradingAlgorithms = () => {
     <Flex h='100%' alignItems='center' justifyContent='center' direction='column'>
       <Flex direction='column' background='gray.200' p={10} rounded={6}>
         <Heading mb={6}>In the mean time...</Heading>
-        <Text mb={6}>Try our a simple mean reversion algorithm:</Text>
+        <Text mb={6}>Try out a twenty minute mean reversion algorithm:</Text>
         <FormControl>
           <FormLabel>Alpaca API Key (paper only)</FormLabel>
           <Input
