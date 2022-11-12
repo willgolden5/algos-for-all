@@ -70,7 +70,7 @@ export default function NavBar() {
             href='/'
             color={useColorModeValue('gray.800', 'white')}
           >
-            Algos for All
+            Blackbox
           </Text>
 
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
