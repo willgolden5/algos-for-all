@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@alpacahq/alpaca-trade-api": "^2.16.1",
     "@babel/core": "^7.0.0",
     "@chakra-ui/icons": "2.0.10",
     "@chakra-ui/react": "^2.3.7",
@@ -19,6 +20,7 @@
     "eslint": "8.26.0",
     "eslint-config-next": "13.0.2",
     "framer-motion": "^6",
+    "fs": "0.0.1-security",
     "next": "13.0.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",

@@ -9,9 +9,14 @@ const Login = () => {
   });
 
   const onSubmit = () => {
+    //testing start top of algo
+    fetch('/api/start', {
+      method: 'POST',
+      body: JSON.stringify(formState),
+    });
     toast({
       title: 'Error',
-      description: 'Incorrect email or password',
+      description: 'Account creation is currently disabled.',
       status: 'error',
       duration: 3000,
       isClosable: true,
