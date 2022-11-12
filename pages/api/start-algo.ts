@@ -17,6 +17,6 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
             rate_limit: true,
         })
         await runMeanReversion(symbol, alpaca);
-        res.status(200).json({ message: "success" });
     }
+    res.status(200).json({ message: "success" });
 }
