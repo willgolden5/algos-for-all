@@ -14,6 +14,8 @@ import {
   useColorModeValue,
   useBreakpointValue,
   useDisclosure,
+  LinkBox,
+  LinkOverlay,
 } from '@chakra-ui/react';
 import Image from 'next/image';
 import cube from '../../public/cube.png';
@@ -65,7 +67,11 @@ export default function NavBar() {
           />
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
-          <Image width={24} height={24} alt={'logo'} src={cube} />
+          <LinkBox>
+            <LinkOverlay href='/'>
+              <Image width={24} height={24} alt={'logo'} src={cube} />
+            </LinkOverlay>
+          </LinkBox>
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
             <DesktopNav />
           </Flex>
