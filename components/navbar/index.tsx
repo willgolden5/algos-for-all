@@ -15,6 +15,8 @@ import {
   useBreakpointValue,
   useDisclosure,
 } from '@chakra-ui/react';
+import Image from 'next/image';
+import cube from '../../public/cube.png';
 
 interface NavItem {
   label: string;
@@ -33,7 +35,7 @@ const NAV_ITEMS: Array<NavItem> = [
     href: '/how-it-works',
   },
   {
-    label: 'Who We Are',
+    label: 'About Blackbox',
     href: 'who-we-are',
   },
 ];
@@ -63,16 +65,7 @@ export default function NavBar() {
           />
         </Flex>
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
-          <Text
-            as={'a'}
-            textAlign={useBreakpointValue({ base: 'center', md: 'left' })}
-            fontFamily={'heading'}
-            href='/'
-            color={useColorModeValue('gray.800', 'white')}
-          >
-            Blackbox
-          </Text>
-
+          <Image width={24} height={24} alt={'logo'} src={cube} />
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
             <DesktopNav />
           </Flex>
