@@ -1,5 +1,5 @@
 import { Button, Flex, FormControl, FormLabel, Heading, Input, Text, useToast } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 //this page should show the trading algorithms that we have available to trade with
 
@@ -7,6 +7,7 @@ import { useState } from 'react';
 
 const TradingAlgorithms = () => {
   const [ticker, setTicker] = useState('');
+  const [accountValue, setAccountValue] = useState({ lastTradeValue: 0, portfolioValue: 0, lastTradeSymbol: '' });
 
   const toast = useToast();
 
@@ -44,11 +45,22 @@ const TradingAlgorithms = () => {
     }
   };
 
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const res = await fetch('/api/user/get-account-data');
+      const data = await res.json();
+      setAccountValue({ lastTradeValue: 0, portfolioValue: data.account.cash, lastTradeSymbol: '' });
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <Flex h='100%' alignItems='center' justifyContent='center' direction='column'>
       <Flex direction='column' background='gray.200' p={10} rounded={6}>
         <Heading mb={6}>In the mean time...</Heading>
         <Text mb={6}>Try out a twenty minute mean reversion algorithm:</Text>
+        <Text mb={6}>Portfolio Value: ${accountValue.portfolioValue}</Text>
         <FormControl>
           <FormLabel>Ticker</FormLabel>
           <Input placeholder='AAPL' variant='filled' mb={3} onChange={(e) => setTicker(e.target.value)} />
