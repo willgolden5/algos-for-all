@@ -7,15 +7,14 @@ import { useState } from 'react';
 
 const TradingAlgorithms = () => {
   const [ticker, setTicker] = useState('');
-  const [apiKey, setApiKey] = useState('');
-  const [apiSecret, setApiSecret] = useState('');
+
   const toast = useToast();
 
   const handleSubmit = async () => {
-    if (ticker && apiKey && apiSecret) {
+    if (ticker) {
       const res = await fetch('/api/start-algo', {
         method: 'POST',
-        body: JSON.stringify({ ticker, apiKey, apiSecret, algo: 'mean-reversion' }),
+        body: JSON.stringify({ ticker, algo: 'mean-reversion' }),
       });
       const data = await res.json();
       console.log(data);
@@ -51,20 +50,6 @@ const TradingAlgorithms = () => {
         <Heading mb={6}>In the mean time...</Heading>
         <Text mb={6}>Try out a twenty minute mean reversion algorithm:</Text>
         <FormControl>
-          <FormLabel>Alpaca API Key (paper only)</FormLabel>
-          <Input
-            placeholder='Alpaca paper api key'
-            variant='filled'
-            mb={3}
-            onChange={(e) => setApiKey(e.target.value)}
-          />
-          <FormLabel>Alpaca API Secret (paper only)</FormLabel>
-          <Input
-            placeholder='Alpaca paper api secret'
-            variant='filled'
-            mb={3}
-            onChange={(e) => setApiSecret(e.target.value)}
-          />
           <FormLabel>Ticker</FormLabel>
           <Input placeholder='AAPL' variant='filled' mb={3} onChange={(e) => setTicker(e.target.value)} />
         </FormControl>
