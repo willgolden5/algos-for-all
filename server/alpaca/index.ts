@@ -1,5 +1,6 @@
 import { OrderSide } from "@master-chief/alpaca/@types/entities";
 import {  AlpacaClient } from "@master-chief/alpaca";
+import round from "../../utils/round";
 
 const MINUTE = 60000
 
@@ -74,7 +75,7 @@ export const submitLimitOrder = async (symbol: string, quantity: number, side: O
         side: side,
         type: 'limit',
         time_in_force: 'day',
-        limit_price: limitPrice
+        limit_price: round(limitPrice, 2)
       });
       return order;
     } catch (err) {

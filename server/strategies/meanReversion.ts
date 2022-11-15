@@ -108,10 +108,12 @@ const rebalance = async (symbol: string, alpaca: AlpacaClient) => {
     const marketOpen = await getOpenTime(alpaca);
     const currTime = await getCurrentTime(alpaca);
     // get the new updated price and running average.
+    const fifteenMinutesAgo = new Date(currTime - (15 * MINUTE));
+    const thirtyMinutesAgo = new Date(currTime - (30 * MINUTE));
     const bars = await alpaca.getBars({
         symbol: symbol,
-        start: new Date(marketOpen),
-        end: new Date(currTime),
+        start: thirtyMinutesAgo,
+        end: fifteenMinutesAgo,
         timeframe: '1Min',
         limit: 20,
     }) as PageOfBars;
