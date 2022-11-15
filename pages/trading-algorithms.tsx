@@ -12,10 +12,10 @@ const TradingAlgorithms = () => {
   const toast = useToast();
 
   const handleSubmit = async () => {
-    if (ticker) {
+    if (ticker.length >= 1) {
       const res = await fetch('/api/start-algo', {
         method: 'POST',
-        body: JSON.stringify({ ticker, algo: 'mean-reversion' }),
+        body: JSON.stringify({ symbol: ticker, algo: 'mean-reversion' }),
       });
       const data = await res.json();
       console.log(data);

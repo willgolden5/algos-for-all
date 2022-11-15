@@ -11,7 +11,7 @@ import  { Calendar, PageOfBars, CancelOrder, Bar, AlpacaClient } from "@master-c
 
 
 const MINUTE = 60000
-const TWENTY_MINUTES = 20
+const FIFTEEN_MINUTES = 15; 
 let lastOrder: CancelOrder | undefined = undefined;
 
 //simple mean reversion algorithm using the alpaca api
@@ -21,21 +21,25 @@ export const runMeanReversion = async (symbol: string, alpaca: AlpacaClient) => 
     await awaitMarketOpen(alpaca);
     console.log("Market Opened.");
     console.log(`Running Mean Reversion Algorithm on ${symbol}`);
-    await getAvgPricesOverLastXMinutes(TWENTY_MINUTES, symbol, alpaca)
+    await getAvgPricesOverLastXMinutes(FIFTEEN_MINUTES, symbol, alpaca)
 };
 
 // get the running average of prices over the last x minutes, waiting until we have 20 bars from the market open.
 const getAvgPricesOverLastXMinutes = async (minutes: number, symbol: string, alpaca: AlpacaClient) => {
+
     const barsPromise = new Promise(resolve => {
         const barChecker = setInterval(async () => {
             await alpaca.getCalendar().then(async (res) => {
+                const currTime = await getCurrentTime(alpaca);
+                //currTime minus 15 minutes in a new date object
+                const fifteenMinutesAgo = new Date(currTime - (15 * MINUTE));
+                const thirtyMinutesAgo = new Date(currTime - (30 * MINUTE));
                 const open = res && res[0] as Calendar;
                 const marketOpen = new Date(open.open);
-                const currTime = await getCurrentTime(alpaca);
                 const barsRes = alpaca.getBars({
                     symbol: symbol,
-                    start: marketOpen,
-                    end: new Date(currTime),
+                    start: thirtyMinutesAgo, //paper trading only allows 15 minutes of data
+                    end: fifteenMinutesAgo,
                     timeframe: '1Min',
                 });
                 const bars: PageOfBars = await barsRes;
@@ -46,7 +50,9 @@ const getAvgPricesOverLastXMinutes = async (minutes: number, symbol: string, alp
             })
         }, MINUTE);
     })
-
+    console.log("Waiting for bars to be available...");
+    await barsPromise
+    console.log("Bars are available");
     //Rebalance our portfolio every minute based off running average data
     const spin = setInterval(async () => {
         if(lastOrder !== undefined) {
