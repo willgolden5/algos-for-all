@@ -28,7 +28,7 @@ export default function Home() {
     <Flex h='100%' alignItems='center' justifyContent='center' direction='column'>
       <Image width={96} height={96} alt={'logo'} src={cube} />
       <Heading>Coming Soon...</Heading>
-      <Text mb={6}>Sign up to be notified when we go live!</Text>
+      <Text mb={6}>Sign up to be notified when blackbox goes live.</Text>
       <Flex direction='column' w='20%'>
         <Button as='a' colorScheme='teal' type='submit' href='/signup' w='100%'>
           Get Notified
