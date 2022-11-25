@@ -22,6 +22,8 @@ const Login = () => {
     });
   };
 
+  const alpacaAuth = () => {};
+
   return (
     <Flex h='100%' alignItems='center' justifyContent='center'>
       <Flex direction='column' background='gray.200' p={10} rounded={6}>
@@ -47,6 +49,7 @@ const Login = () => {
         <Button colorScheme='teal' type='submit' w='100%' onClick={() => onSubmit()}>
           Log in
         </Button>
+        <Button>Login with Alpaca</Button>
       </Flex>
     </Flex>
   );
