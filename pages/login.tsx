@@ -9,6 +9,8 @@ const Login = () => {
     password: '',
   });
 
+  const isDevelopment = process.env.NODE_ENV === 'development';
+
   const onSubmit = () => {
     fetch('/api/user/login', {
       method: 'POST',
@@ -24,7 +26,8 @@ const Login = () => {
   };
 
   const alpacaAuth = () => {
-    return buildAuthLink('6c41c11c0633aff59d424f450ea4969b');
+    const redirectLink = isDevelopment ? 'http://localhost:3000/' : 'https://blackboxquant.com/';
+    return buildAuthLink('6c41c11c0633aff59d424f450ea4969b', redirectLink);
   };
 
   return (
