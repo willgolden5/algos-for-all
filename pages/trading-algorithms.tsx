@@ -9,10 +9,11 @@ const TradingAlgorithms = () => {
   const [ticker, setTicker] = useState('');
   const [accountValue, setAccountValue] = useState({ lastTradeValue: 0, portfolioValue: 0, lastTradeSymbol: '' });
   const toast = useToast();
-  const getToken = sessionStorage.getItem('access_token');
-  const accessToken = getToken ? getToken : '';
 
   const handleSubmit = async () => {
+    const getToken = sessionStorage.getItem('access_token');
+    const accessToken = getToken ? getToken : '';
+
     if (ticker.length >= 1) {
       const res = await fetch('/api/start-algo', {
         method: 'POST',
