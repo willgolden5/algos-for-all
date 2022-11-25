@@ -1,6 +1,7 @@
 import { Button, Flex, FormControl, FormLabel, Heading, Input, Link, Text, useToast } from '@chakra-ui/react';
 import { useState } from 'react';
 import { buildAuthLink } from '../utils/alpacaAuthBuilder';
+import { isDevelopment } from '../utils/utils';
 
 const Login = () => {
   const toast = useToast();
@@ -8,8 +9,6 @@ const Login = () => {
     email: '',
     password: '',
   });
-
-  const isDevelopment = process.env.NODE_ENV === 'development';
 
   const onSubmit = () => {
     fetch('/api/user/login', {

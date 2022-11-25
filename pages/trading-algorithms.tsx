@@ -8,14 +8,15 @@ import { useEffect, useState } from 'react';
 const TradingAlgorithms = () => {
   const [ticker, setTicker] = useState('');
   const [accountValue, setAccountValue] = useState({ lastTradeValue: 0, portfolioValue: 0, lastTradeSymbol: '' });
-
   const toast = useToast();
+  const getToken = sessionStorage.getItem('access_token');
+  const accessToken = getToken ? getToken : '';
 
   const handleSubmit = async () => {
     if (ticker.length >= 1) {
       const res = await fetch('/api/start-algo', {
         method: 'POST',
-        body: JSON.stringify({ symbol: ticker, algo: 'mean-reversion' }),
+        body: JSON.stringify({ symbol: ticker, algo: 'mean-reversion', accessToken }),
       });
       const data = await res.json();
       console.log(data);

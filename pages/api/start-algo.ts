@@ -6,12 +6,11 @@ import { runMeanReversion } from "../../server/strategies/meanReversion";
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
     const body = await JSON.parse(req.body);
-    const { algo, symbol, apiKey, apiSecret } = body;
+    const { algo, symbol, accessToken } = body;
     if(algo === "mean-reversion") {
         const alpaca = new AlpacaClient({
             credentials: {
-                key: process.env.ALPACA_API_KEY ? process.env.ALPACA_API_KEY : apiKey,
-                secret: process.env.ALPACA_API_SECRET ? process.env.ALPACA_API_SECRET : apiSecret,
+                access_token: accessToken,
                 paper: true,
             },
             rate_limit: true,
