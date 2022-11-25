@@ -1,5 +1,6 @@
-import { Button, Flex, FormControl, FormLabel, Heading, Input, useToast } from '@chakra-ui/react';
+import { Button, Flex, FormControl, FormLabel, Heading, Input, Link, Text, useToast } from '@chakra-ui/react';
 import { useState } from 'react';
+import { buildAuthLink } from '../utils/alpacaAuthBuilder';
 
 const Login = () => {
   const toast = useToast();
@@ -22,13 +23,16 @@ const Login = () => {
     });
   };
 
-  const alpacaAuth = () => {};
+  const alpacaAuth = () => {
+    return buildAuthLink('6c41c11c0633aff59d424f450ea4969b');
+  };
 
   return (
     <Flex h='100%' alignItems='center' justifyContent='center'>
-      <Flex direction='column' background='gray.200' p={10} rounded={6}>
+      <Flex direction='column' background='gray.200' p={8} rounded={6} w='25%'>
         <Heading mb={6}>Log in</Heading>
-        <FormControl>
+        <Text mb={6}>Use your Alpaca.markets account to start using blackbox algorithms</Text>
+        {/* <FormControl>
           <FormLabel>Email</FormLabel>
           <Input
             placeholder='me@email.com'
@@ -45,11 +49,10 @@ const Login = () => {
             type='password'
             onChange={(e) => setFormState({ ...formState, password: e.target.value })}
           />
-        </FormControl>
-        <Button colorScheme='teal' type='submit' w='100%' onClick={() => onSubmit()}>
-          Log in
+        </FormControl> */}
+        <Button href={alpacaAuth()} as='a' colorScheme='teal' type='submit' w='100%' onClick={() => onSubmit()}>
+          Login with Alpaca
         </Button>
-        <Button>Login with Alpaca</Button>
       </Flex>
     </Flex>
   );
