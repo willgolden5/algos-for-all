@@ -9,12 +9,13 @@ datasource db {
 }
 
 model user {
-  id         Int    @id @default(autoincrement())
-  first_name String @db.VarChar(255)
-  last_name  String @db.VarChar(255)
-  email      String @unique @db.VarChar(255)
-  phone      String @unique @db.VarChar(255)
-  password   String @db.VarChar(255)
+  id            Int    @id @default(autoincrement())
+  first_name    String @db.VarChar(255)
+  last_name     String @db.VarChar(255)
+  email         String @unique @db.VarChar(255)
+  phone         String @unique @db.VarChar(255)
+  alpaca_token  String @db.VarChar(255)
+  password      String @db.VarChar(255)
 }
 
 model mailing_list {
