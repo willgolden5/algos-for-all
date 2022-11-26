@@ -78,7 +78,7 @@ export default function NavBar() {
         </Flex>
 
         <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
-          <Button as={'a'} fontSize={'sm'} fontWeight={400} variant={'link'} href={'/login'}>
+          <Button as={'a'} fontSize={'sm'} colorScheme={'yellow'} fontWeight={400} variant={'link'} href={'/login'}>
             Sign In
           </Button>
           <Button
@@ -86,8 +86,7 @@ export default function NavBar() {
             display={{ base: 'none', md: 'inline-flex' }}
             fontSize={'sm'}
             fontWeight={600}
-            color={'white'}
-            bg={'teal'}
+            colorScheme={'yellow'}
             href={'/signup'}
           >
             Sign Up

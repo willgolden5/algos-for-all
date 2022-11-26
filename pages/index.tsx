@@ -9,6 +9,7 @@ export default function Home() {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
     if (code) {
+      // TODO: get the user via prisma/trpc and update the user instead of setting session
       fetch('/api/user/login', {
         method: 'POST',
         body: JSON.stringify({ code }),
@@ -27,10 +28,10 @@ export default function Home() {
   return (
     <Flex h='100%' alignItems='center' justifyContent='center' direction='column'>
       <Image width={96} height={96} alt={'logo'} src={cube} />
-      <Heading>Coming Soon...</Heading>
+      <Heading mb={3}>Coming Soon...</Heading>
       <Text mb={6}>Sign up to be notified when blackbox goes live.</Text>
       <Flex direction='column' w='20%'>
-        <Button as='a' colorScheme='teal' type='submit' href='/signup' w='100%'>
+        <Button as='a' colorScheme={'yellow'} type='submit' href='/signup' w='100%'>
           Get Notified
         </Button>
       </Flex>

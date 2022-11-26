@@ -67,7 +67,7 @@ const TradingAlgorithms = () => {
           <FormLabel>Ticker</FormLabel>
           <Input placeholder='AAPL' variant='filled' mb={3} onChange={(e) => setTicker(e.target.value)} />
         </FormControl>
-        <Button mt={4} colorScheme='teal' onClick={() => handleSubmit()}>
+        <Button mt={4} colorScheme={'yellow'} onClick={() => handleSubmit()}>
           Submit
         </Button>
       </Flex>

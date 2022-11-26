@@ -93,7 +93,7 @@ const SignUp = () => {
             />
           </FormControl>
         </Flex>
-        <Button colorScheme='teal' type='submit' onClick={() => submitForm()}>
+        <Button colorScheme={'yellow'} type='submit' onClick={() => submitForm()}>
           Register
         </Button>
       </Flex>

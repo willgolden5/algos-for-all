@@ -12,10 +12,19 @@ const config: ThemeConfig = {
 const colors = {
   colors: {
     black: '#16161D',
+    yellow: {
+      50: '#fde766',
+      100: '#fddf33',
+      200: '#fcdb1a',
+      300: '#fcd700',
+      400: '#e3c200',
+      500: '#caac00',
+      600: '#b09700',
+    }
   }
 }
 
 // 3. extend the theme
-const theme = extendTheme({ config })
+const theme = extendTheme({ config, colors })
 
 export default theme;

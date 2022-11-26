@@ -1,7 +1,9 @@
-import { Button, Flex, FormControl, FormLabel, Heading, Input, Link, Text, useToast } from '@chakra-ui/react';
+import { Box, Button, Flex, FormControl, FormLabel, Heading, Input, Link, Text, useToast } from '@chakra-ui/react';
 import { useState } from 'react';
 import { buildAuthLink } from '../utils/alpacaAuthBuilder';
 import { isDevelopment } from '../utils/utils';
+import alpaca from '../public/image-51.png';
+import Image from 'next/image';
 
 const Login = () => {
   const toast = useToast();
@@ -11,16 +13,18 @@ const Login = () => {
   });
 
   const onSubmit = () => {
+    setTimeout(() => {
+      toast({
+        title: 'Get ready!',
+        description: "You are being redirected to Alpaca's login page.",
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+      });
+    }, 2000);
     fetch('/api/user/login', {
       method: 'POST',
       body: JSON.stringify(formState),
-    });
-    toast({
-      title: 'Error',
-      description: 'Account creation is currently disabled.',
-      status: 'error',
-      duration: 3000,
-      isClosable: true,
     });
   };
 
@@ -31,29 +35,24 @@ const Login = () => {
 
   return (
     <Flex h='100%' alignItems='center' justifyContent='center'>
-      <Flex direction='column' background='gray.200' p={8} rounded={6} w='25%'>
+      <Flex direction='column' background='gray.200' p={8} rounded={6} w='25%' minW='320px'>
         <Heading mb={6}>Log in</Heading>
         <Text mb={6}>Use your Alpaca.markets account to start using blackbox algorithms</Text>
-        {/* <FormControl>
-          <FormLabel>Email</FormLabel>
-          <Input
-            placeholder='me@email.com'
-            variant='filled'
-            mb={3}
-            type='email'
-            onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-          />
-          <FormLabel>Password</FormLabel>
-          <Input
-            placeholder='******'
-            variant='filled'
-            mb={6}
-            type='password'
-            onChange={(e) => setFormState({ ...formState, password: e.target.value })}
-          />
-        </FormControl> */}
-        <Button href={alpacaAuth()} as='a' colorScheme='teal' type='submit' w='100%' onClick={() => onSubmit()}>
-          Login with Alpaca
+        <Button
+          rightIcon={
+            <Box w='78px' h=''>
+              <Image src={alpaca} alt={'logo'} />
+            </Box>
+          }
+          href={alpacaAuth()}
+          as='a'
+          variant={'outline'}
+          colorScheme='black'
+          type='submit'
+          w='100%'
+          onClick={() => onSubmit()}
+        >
+          Login with
         </Button>
       </Flex>
     </Flex>
