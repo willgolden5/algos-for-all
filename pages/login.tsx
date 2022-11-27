@@ -6,28 +6,6 @@ import alpaca from '../public/image-51.png';
 import Image from 'next/image';
 
 const Login = () => {
-  const toast = useToast();
-  const [formState, setFormState] = useState({
-    email: '',
-    password: '',
-  });
-
-  const onSubmit = () => {
-    setTimeout(() => {
-      toast({
-        title: 'Get ready!',
-        description: "You are being redirected to Alpaca's login page.",
-        status: 'success',
-        duration: 2000,
-        isClosable: true,
-      });
-    }, 2000);
-    fetch('/api/user/login', {
-      method: 'POST',
-      body: JSON.stringify(formState),
-    });
-  };
-
   const alpacaAuth = () => {
     const redirectLink = isDevelopment ? 'http://localhost:3000/' : 'https://blackboxquant.com/';
     return buildAuthLink('6c41c11c0633aff59d424f450ea4969b', redirectLink);
@@ -50,7 +28,6 @@ const Login = () => {
           colorScheme='black'
           type='submit'
           w='100%'
-          onClick={() => onSubmit()}
         >
           Login with
         </Button>

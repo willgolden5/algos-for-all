@@ -8,7 +8,7 @@ export default function Home() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
-    if (code) {
+    if (code && !sessionStorage.getItem('access_token')) {
       // TODO: get the user via prisma/trpc and update the user instead of setting session
       fetch('/api/user/login', {
         method: 'POST',
@@ -16,13 +16,15 @@ export default function Home() {
       })
         .then((res) => res.json())
         .then((data) => {
+          console.log(data);
+          // Create blackbox account: use access_token to request account data from alpaca
+          // /api/user/create
           sessionStorage.setItem('access_token', data.access_token);
           sessionStorage.setItem('token_type', data.token_type);
           sessionStorage.setItem('scope', data.scope);
         })
         .catch((err) => console.log(err));
     }
-    sessionStorage.setItem('alpacaAuthCode', code as string);
   }, []);
 
   return (

@@ -19,6 +19,9 @@ import {
 } from '@chakra-ui/react';
 import Image from 'next/image';
 import cube from '../../public/cube.png';
+import alpaca from '../../public/image-51.png';
+import { buildAuthLink } from '../../utils/alpacaAuthBuilder';
+import { isDevelopment } from '../../utils/utils';
 
 interface NavItem {
   label: string;
@@ -44,6 +47,11 @@ const NAV_ITEMS: Array<NavItem> = [
 
 export default function NavBar() {
   const { isOpen, onToggle } = useDisclosure();
+
+  const alpacaAuth = () => {
+    const redirectLink = isDevelopment ? 'http://localhost:3000/' : 'https://blackboxquant.com/';
+    return buildAuthLink('6c41c11c0633aff59d424f450ea4969b', redirectLink);
+  };
 
   return (
     <Box h='100%'>
@@ -78,18 +86,20 @@ export default function NavBar() {
         </Flex>
 
         <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
-          <Button as={'a'} fontSize={'sm'} colorScheme={'yellow'} fontWeight={400} variant={'link'} href={'/login'}>
-            Sign In
-          </Button>
           <Button
-            as={'a'}
-            display={{ base: 'none', md: 'inline-flex' }}
-            fontSize={'sm'}
-            fontWeight={600}
-            colorScheme={'yellow'}
-            href={'/signup'}
+            rightIcon={
+              <Box w='78px' h=''>
+                <Image src={alpaca} alt={'logo'} />
+              </Box>
+            }
+            href={alpacaAuth()}
+            as='a'
+            variant={'outline'}
+            colorScheme='black'
+            type='submit'
+            w='100%'
           >
-            Sign Up
+            Login with
           </Button>
         </Stack>
       </Flex>
