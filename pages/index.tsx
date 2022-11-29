@@ -8,17 +8,22 @@ export default function Home() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
-    if (code && !sessionStorage.getItem('access_token')) {
-      // TODO: get the user via prisma/trpc and update the user instead of setting session
+    if (code) {
       fetch('/api/user/login', {
         method: 'POST',
         body: JSON.stringify({ code }),
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
-          // Create blackbox account: use access_token to request account data from alpaca
+          // TODO: Create blackbox account: use access_token to request account data from alpaca
           // /api/user/create
+          fetch('/api/user/create', {
+            method: 'POST',
+            body: JSON.stringify({ data }),
+          })
+            .then((res) => res.json())
+            .then((data) => console.log(data));
+
           sessionStorage.setItem('access_token', data.access_token);
           sessionStorage.setItem('token_type', data.token_type);
           sessionStorage.setItem('scope', data.scope);

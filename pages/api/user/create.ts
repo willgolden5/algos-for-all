@@ -2,6 +2,7 @@
 
 import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
+import { AlpacaClient } from '@master-chief/alpaca';
 
 const prisma = new PrismaClient();
 
@@ -9,13 +10,21 @@ export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { firstName, lastName, password, email, phone } = req.body;
-  const result = await prisma.user.create({data: {
-        first_name: firstName,
-        last_name:  lastName,
-        email,
-        password,
-        phone
-  }});
-  res.json(result);
+  const { data } = JSON.parse(req.body);
+  const alpaca = new AlpacaClient({
+    credentials: {
+        access_token: data.access_token,
+        paper: true,
+    },
+    rate_limit: true,
+  })
+
+  const account = await alpaca.getAccount();
+  res.status(200).json({ account });
+  // prisma.user.upsert({
+  //   where: { alpaca_id: account.account_number },
+  //   create: undefined,
+  //   update: undefined
+  // })
+  
 }
