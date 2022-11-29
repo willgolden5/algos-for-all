@@ -1,6 +1,8 @@
 'use client';
 import { Button, Flex, FormControl, FormLabel, Heading, Input, Text, useToast } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { setCookie, hasCookie } from 'cookies-next';
+import { useRouter } from 'next/router';
 
 const SignUp = () => {
   const toast = useToast();
@@ -9,34 +11,72 @@ const SignUp = () => {
     lastName: '',
     firstName: '',
     phone: '',
+    accessToken: '',
   });
+  const router = useRouter();
+
+  const hasAccount = hasCookie('account');
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    if (hasAccount) {
+      router.push('/');
+      toast({
+        title: 'Signed in!',
+        description: 'Signed in with alpaca.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+    if (code) {
+      fetch('/api/user/login', {
+        method: 'POST',
+        body: JSON.stringify({ code }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setFormState({ ...formState, accessToken: data.access_token });
+          sessionStorage.setItem('access_token', data.access_token);
+          sessionStorage.setItem('token_type', data.token_type);
+          sessionStorage.setItem('scope', data.scope);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, []);
 
   const submitForm = async () => {
-    const data = await fetch('/api/mailing-list-create', {
+    // TODO: login with alpaca
+    console.log({ ...formState });
+    const data = await fetch('/api/user/create', {
       method: 'POST',
-      body: JSON.stringify(formState),
+      body: JSON.stringify({ ...formState }),
     });
-    const res = await data.json();
-    console.log(res);
-    if (res.message === 'already exists') {
+    const res = await data;
+    if (res.ok) {
       toast({
-        title: 'Error',
-        description: 'There was an error adding you to the mailing list.',
-        status: 'error',
+        title: 'Account created.',
+        description: "We've created your account.",
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    } else if (res.status === 309) {
+      // set cookie with account info
+      setCookie('account', res.body);
+      toast({
+        title: 'Signed in!',
+        description: 'Signed in with alpaca.',
+        status: 'success',
         duration: 3000,
         isClosable: true,
       });
     } else {
-      setFormState({
-        email: '',
-        lastName: '',
-        firstName: '',
-        phone: '',
-      });
       toast({
-        title: 'Success',
-        description: 'You will be notified when we go live!',
-        status: 'success',
+        title: 'Account creation failed.',
+        description: 'Please try again or contact us if the problem persists.',
+        status: 'error',
         duration: 3000,
         isClosable: true,
       });
@@ -45,8 +85,8 @@ const SignUp = () => {
   return (
     <Flex h='100%' alignItems='center' justifyContent='center'>
       <Flex direction='column' background='gray.200' p={10} rounded={6}>
-        <Heading mb={6}>Interest list</Heading>
-        <Text mb={6}>Sign up to be notified when we go live!</Text>
+        <Heading mb={6}>Not done yet!</Heading>
+        <Text mb={6}>Complete your account setup below:</Text>
         <Flex direction='row' w='100%'>
           <FormControl pr={2} w='100%'>
             <FormLabel>First Name</FormLabel>

@@ -49,7 +49,7 @@ export default function NavBar() {
   const { isOpen, onToggle } = useDisclosure();
 
   const alpacaAuth = () => {
-    const redirectLink = isDevelopment ? 'http://localhost:3000/' : 'https://blackboxquant.com/';
+    const redirectLink = isDevelopment ? 'http://localhost:3000/signup' : 'https://blackboxquant.com/signup';
     return buildAuthLink('6c41c11c0633aff59d424f450ea4969b', redirectLink);
   };
 

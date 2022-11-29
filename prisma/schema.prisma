@@ -16,7 +16,6 @@ model user {
   phone         String @unique @db.VarChar(255)
   alpaca_token  String @db.VarChar(255)
   alpaca_id     String @unique @db.VarChar(255)
-  password      String @db.VarChar(255)
 }
 
 model mailing_list {
