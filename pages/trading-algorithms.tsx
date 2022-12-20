@@ -1,4 +1,5 @@
 import { Button, Flex, FormControl, FormLabel, Heading, Input, Text, useToast } from '@chakra-ui/react';
+import { getCookie } from 'cookies-next';
 import { useEffect, useState } from 'react';
 
 //this page should show the trading algorithms that we have available to trade with
@@ -11,8 +12,9 @@ const TradingAlgorithms = () => {
   const toast = useToast();
 
   const handleSubmit = async () => {
-    const getToken = sessionStorage.getItem('access_token');
-    const accessToken = getToken ? getToken : '';
+    const getToken = getCookie('account');
+    const jsonCookie = JSON.parse(getToken as string);
+    const accessToken = jsonCookie.alpaca_token ? jsonCookie.alpaca_token : '';
 
     if (ticker.length >= 1) {
       const res = await fetch('/api/start-algo', {
