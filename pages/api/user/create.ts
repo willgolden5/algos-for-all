@@ -4,6 +4,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { PrismaClient } from "@prisma/client";
 import { AlpacaClient } from '@master-chief/alpaca';
 import {z} from "zod";
+import { setCookie } from "cookies-next";
 
 const schema = z.object({
   email: z.string(),
@@ -30,7 +31,7 @@ export default async function handle(
     rate_limit: true,
   })
   const account = await alpaca.getAccount();
-
+console.log(account)
   const accountData = {
     alpaca_id: account.account_number as string,
     email: email as string,
@@ -48,6 +49,7 @@ export default async function handle(
   })
 
   if(existingEntry) {
+    setCookie('account', existingEntry);
     res.status(309).json({message: "account already exists", account: existingEntry});
   } else {
     const createUser = await prisma.user.upsert({
@@ -62,7 +64,4 @@ export default async function handle(
       res.status(500).json({error: err});
     };
   }
-  
-  
-
 }

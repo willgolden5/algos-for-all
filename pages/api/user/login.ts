@@ -31,6 +31,7 @@ export default async function handle(
         },
         body: new URLSearchParams(bodyParams)
     });
+
     const data = await response.json();
     const alpaca = new AlpacaClient({
       credentials: {
@@ -40,16 +41,19 @@ export default async function handle(
       rate_limit: true,
   })
     const account = await alpaca.getAccount();
+    
+
     // if account exists, set the cookie
     const existingEntry = await prisma.user.findUnique({
       where: {alpaca_id: account.account_number},
     })
-
+    console.log('entry',existingEntry)
     if(existingEntry) {
-      setCookie('account', existingEntry)
+      // reply with account to be set as cookie
       res.status(309).json({message: "account already exists", account: existingEntry});
+    } else {
+      res.status(200).json(data);
     }
-    res.status(200).json(data);
   } catch (err) {
     console.log(err);
     res.status(500).json({error: err});

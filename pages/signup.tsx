@@ -1,7 +1,7 @@
 'use client';
 import { Button, Flex, FormControl, FormLabel, Heading, Input, Text, useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { setCookie, hasCookie } from 'cookies-next';
+import { setCookie, hasCookie, getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 
 const SignUp = () => {
@@ -15,21 +15,16 @@ const SignUp = () => {
   });
   const router = useRouter();
 
-  const hasAccount = hasCookie('account');
+  useEffect(() => {
+    const hasAccount = hasCookie('account');
+    if (hasAccount) {
+    }
+  }, []);
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
-    if (hasAccount) {
-      router.push('/');
-      toast({
-        title: 'Signed in!',
-        description: 'Signed in with alpaca.',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
-      });
-    }
+
     if (code) {
       fetch('/api/user/login', {
         method: 'POST',
@@ -37,6 +32,18 @@ const SignUp = () => {
       })
         .then((res) => res.json())
         .then((data) => {
+          if (data.message === 'account already exists' || getCookie('account')) {
+            // set cookie with account info
+            setCookie('account', JSON.stringify(data.account));
+            router.push('/');
+            toast({
+              title: 'Signed in!',
+              description: 'Signed in with alpaca.',
+              status: 'success',
+              duration: 3000,
+              isClosable: true,
+            });
+          }
           setFormState({ ...formState, accessToken: data.access_token });
           sessionStorage.setItem('access_token', data.access_token);
           sessionStorage.setItem('token_type', data.token_type);
@@ -54,6 +61,7 @@ const SignUp = () => {
       body: JSON.stringify({ ...formState }),
     });
     const res = await data;
+    console.log(res);
     if (res.ok) {
       toast({
         title: 'Account created.',
