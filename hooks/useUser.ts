@@ -1,8 +1,7 @@
-import { PrismaClient } from "@prisma/client";
 import { CookieValueTypes, getCookie } from "cookies-next";
 import useSWR from "swr";
 
-type User = {
+export type User = {
   id: number;
   first_name: string;
   last_name: string;
@@ -12,28 +11,21 @@ type User = {
   alpaca_id: string;
 };
 
-const prisma = new PrismaClient();
-
 const fetcher = async (...args: any) => {
   const cookie: CookieValueTypes = getCookie("account");
   if (typeof cookie !== "string") return JSON.stringify("null");
   const jsonCookie: User = await JSON.parse(cookie);
-  const user = await prisma.user.findUnique({
-    where: {
-      id: jsonCookie.id,
-    },
-  });
 
-  return user;
+  return jsonCookie;
 };
 
 const useUser = () => {
   const { data, error } = useSWR("/api/user", fetcher);
-
+  const userData = data as User;
   return {
-    user: data,
+    user: userData,
     isLoading: !error && !data,
-    isError: error,
+    error: error,
   };
 };
 

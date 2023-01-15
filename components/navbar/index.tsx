@@ -16,12 +16,15 @@ import {
   useDisclosure,
   LinkBox,
   LinkOverlay,
+  Avatar,
 } from '@chakra-ui/react';
 import Image from 'next/image';
+import useUser, {User} from '../../hooks/useUser';
 import cube from '../../public/cube.png';
 import alpaca from '../../public/image-51.png';
 import { buildAuthLink } from '../../utils/alpacaAuthBuilder';
 import { isDevelopment } from '../../utils/utils';
+import ProfileMenu from './ProfileMenu';
 
 interface NavItem {
   label: string;
@@ -47,6 +50,8 @@ const NAV_ITEMS: Array<NavItem> = [
 
 export default function NavBar() {
   const { isOpen, onToggle } = useDisclosure();
+  const { user } = useUser();
+
 
   const alpacaAuth = () => {
     const redirectLink = isDevelopment ? 'http://localhost:3000/signup' : 'https://blackboxquant.com/signup';
@@ -86,7 +91,7 @@ export default function NavBar() {
         </Flex>
 
         <Stack flex={{ base: 1, md: 0 }} justify={'flex-end'} direction={'row'} spacing={6}>
-          <Button
+         {user ? <ProfileMenu user={user} /> : <Button
             rightIcon={
               <Box w='78px' h=''>
                 <Image src={alpaca} alt={'logo'} />
@@ -100,7 +105,7 @@ export default function NavBar() {
             w='100%'
           >
             Login with
-          </Button>
+          </Button>}
         </Stack>
       </Flex>
 
