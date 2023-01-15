@@ -43,14 +43,23 @@ export default async function handle(
     const account = await alpaca.getAccount();
     
 
-    // if account exists, set the cookie
+    // if account exists, update the token
     const existingEntry = await prisma.user.findUnique({
       where: {alpaca_id: account.account_number},
     })
-    console.log('entry',existingEntry)
+    console.log('entry',account)
     if(existingEntry) {
+      await prisma.user.update({
+        where: {alpaca_id: account.account_number},
+        data: {
+          alpaca_token: data.access_token
+        }
+      })
+      const updatedEntry = await prisma.user.findUnique({
+        where: {alpaca_id: account.account_number},
+      })
       // reply with account to be set as cookie
-      res.status(309).json({message: "account already exists", account: existingEntry});
+      res.status(309).json({message: "account already exists", account: updatedEntry});
     } else {
       res.status(200).json(data);
     }

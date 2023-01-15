@@ -1,7 +1,6 @@
 'use client';
-import { Button, Flex, Heading, Input, Text } from '@chakra-ui/react';
+import { Button, Flex, Heading, Text } from '@chakra-ui/react';
 import Image from 'next/image';
-import { useEffect } from 'react';
 import cube from '../public/cube.png';
 
 export default function Home() {

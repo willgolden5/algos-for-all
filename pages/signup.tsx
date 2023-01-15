@@ -54,7 +54,6 @@ const SignUp = () => {
   }, []);
 
   const submitForm = async () => {
-    // TODO: login with alpaca
     console.log({ ...formState });
     const data = await fetch('/api/user/create', {
       method: 'POST',
