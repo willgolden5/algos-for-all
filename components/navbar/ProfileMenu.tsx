@@ -15,16 +15,15 @@ const ProfileMenu = ({user}: ProfileMenuProps) => {
                 <Avatar
                     name={`${user.first_name} ${user.last_name}`}
                     size="sm"
-                    bg="teal.700"
+                    bg="gray.700"
                     color="white"
                     onClick={onToggle}
                     cursor={'pointer'}
-                    data-cy="user-badge"
                 />
             </PopoverTrigger>
             <PopoverContent>
                 <PopoverBody>
-                    <PopoverMenu />
+                    <PopoverMenu user={user} />
                 </PopoverBody>
             </PopoverContent>
         </Popover>
