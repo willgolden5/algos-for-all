@@ -10,7 +10,7 @@ type ProfileMenuProps = {
 const ProfileMenu = ({user}: ProfileMenuProps) => {
     const { isOpen, onToggle, onClose } = useDisclosure();
     return (
-        <Popover isOpen={isOpen} onClose={onClose} placement="bottom-end" isLazy>
+        <Popover isOpen={isOpen} onClose={onClose} placement="bottom-end">
             <PopoverTrigger>
                 <Avatar
                     name={`${user.first_name} ${user.last_name}`}

@@ -1,10 +1,11 @@
 'use client';
-import { Button, Flex, FormControl, FormLabel, Heading, Input, Text, useToast } from '@chakra-ui/react';
+import { Button, Flex, FormControl, FormLabel, Heading, Input, Spinner, Text, useToast } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { setCookie, hasCookie, getCookie } from 'cookies-next';
 import { useRouter } from 'next/router';
 
 const SignUp = () => {
+  const [hasAccount, setHasAccount] = useState(null);
   const toast = useToast();
   const [formState, setFormState] = useState({
     email: '',
@@ -15,11 +16,7 @@ const SignUp = () => {
   });
   const router = useRouter();
 
-  useEffect(() => {
-    const hasAccount = hasCookie('account');
-    if (hasAccount) {
-    }
-  }, []);
+
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -34,6 +31,7 @@ const SignUp = () => {
         .then((data) => {
           if (data.message === 'account already exists' || getCookie('account')) {
             // set cookie with account info
+            setHasAccount(true);
             setCookie('account', JSON.stringify(data.account));
             router.push('/');
             toast({
@@ -89,63 +87,74 @@ const SignUp = () => {
       });
     }
   };
-  return (
-    <Flex h='100%' alignItems='center' justifyContent='center'>
-      <Flex direction='column' background='gray.200' p={10} rounded={6}>
-        <Heading mb={6}>Not done yet!</Heading>
-        <Text mb={6}>Complete your account setup below:</Text>
-        <Flex direction='row' w='100%'>
-          <FormControl pr={2} w='100%'>
-            <FormLabel>First Name</FormLabel>
-            <Input
-              placeholder='John'
-              variant='filled'
-              mb={3}
-              value={formState.firstName}
-              onChange={(e) => setFormState({ ...formState, firstName: e.target.value })}
-            />
-          </FormControl>
-          <FormControl pl={2} w='100%'>
-            <FormLabel>Last Name</FormLabel>
-            <Input
-              placeholder='Smith'
-              variant='filled'
-              mb={6}
-              value={formState.lastName}
-              onChange={(e) => setFormState({ ...formState, lastName: e.target.value })}
-            />
-          </FormControl>
-        </Flex>
-        <Flex direction='row' w='100%'>
-          <FormControl pr={2}>
-            <FormLabel>Email</FormLabel>
-            <Input
-              placeholder='jsmith@gmail.com'
-              variant='filled'
-              mb={6}
-              type='email'
-              value={formState.email}
-              onChange={(e) => setFormState({ ...formState, email: e.target.value })}
-            />
-          </FormControl>
-          <FormControl pl={2}>
-            <FormLabel>Phone</FormLabel>
-            <Input
-              placeholder='(555)-555-5555'
-              variant='filled'
-              mb={6}
-              type='phone'
-              value={formState.phone}
-              onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
-            />
-          </FormControl>
-        </Flex>
-        <Button colorScheme={'yellow'} type='submit' onClick={() => submitForm()}>
-          Register
-        </Button>
-      </Flex>
+    if (!hasAccount) return
+  (
+    <Flex align='center' justify='center' w='100vw' h='full'>
+      <Spinner
+        speed='0.65s'
+        emptyColor='gray.700'
+        color='gray.700'
+        size='xl'
+    />
     </Flex>
   );
+    return (
+        <Flex h='100%' alignItems='center' justifyContent='center'>
+            <Flex direction='column' background='gray.200' p={10} rounded={6}>
+                <Heading mb={6}>Not done yet!</Heading>
+                <Text mb={6}>Complete your account setup below:</Text>
+                <Flex direction='row' w='100%'>
+                    <FormControl pr={2} w='100%'>
+                        <FormLabel>First Name</FormLabel>
+                        <Input
+                            placeholder='John'
+                            variant='filled'
+                            mb={3}
+                            value={formState.firstName}
+                            onChange={(e) => setFormState({ ...formState, firstName: e.target.value })}
+                        />
+                    </FormControl>
+                    <FormControl pl={2} w='100%'>
+                        <FormLabel>Last Name</FormLabel>
+                        <Input
+                            placeholder='Smith'
+                            variant='filled'
+                            mb={6}
+                            value={formState.lastName}
+                            onChange={(e) => setFormState({ ...formState, lastName: e.target.value })}
+                        />
+                    </FormControl>
+                </Flex>
+                <Flex direction='row' w='100%'>
+                    <FormControl pr={2}>
+                        <FormLabel>Email</FormLabel>
+                        <Input
+                            placeholder='jsmith@gmail.com'
+                            variant='filled'
+                            mb={6}
+                            type='email'
+                            value={formState.email}
+                            onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                        />
+                    </FormControl>
+                    <FormControl pl={2}>
+                        <FormLabel>Phone</FormLabel>
+                        <Input
+                            placeholder='(555)-555-5555'
+                            variant='filled'
+                            mb={6}
+                            type='phone'
+                            value={formState.phone}
+                            onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
+                        />
+                    </FormControl>
+                </Flex>
+                <Button colorScheme={'yellow'} type='submit' onClick={() => submitForm()}>
+                    Register
+                </Button>
+            </Flex>
+        </Flex>
+    );
 };
 
 export default SignUp;

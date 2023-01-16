@@ -1,4 +1,4 @@
-import { Avatar, Box, Divider, Flex, Heading, Text } from "@chakra-ui/react"
+import { Avatar, Box, Divider, Flex, Heading, Text, useToast } from "@chakra-ui/react"
 import { removeCookies } from "cookies-next"
 import { useRouter } from "next/router"
 import { User } from "../../hooks/useUser"
@@ -23,10 +23,18 @@ const MenuRow = ({ children, link }: { children: React.ReactNode, link: string }
 
 const PopoverMenu = ({ user }: PopoverMenuProps) => {
     const router = useRouter();
+    const toast = useToast();
 
     const logout = () => {
         removeCookies('account')
         router.push('/')
+        toast({
+            title: "Logged out",
+            description: "You have been logged out",
+            status: "warning",
+            duration: 3000,
+            isClosable: true,
+        })
     }
 
     return (

@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 
 //this page should show the trading algorithms that we have available to trade with
 
-// TODO:
-
 const TradingAlgorithms = () => {
   const [ticker, setTicker] = useState('');
   const [accountValue, setAccountValue] = useState({ lastTradeValue: 0, portfolioValue: 0, lastTradeSymbol: '' });
