@@ -1,13 +1,15 @@
 'use client';
 import { Button, Flex, FormControl, FormLabel, Heading, Input, Spinner, Text, useToast } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
-import { setCookie, hasCookie, getCookie } from 'cookies-next';
+import { useEffect, useRef, useState } from 'react';
+import { setCookie, hasCookie  } from 'cookies-next';
 import { useRouter } from 'next/router';
 
 const SignUp = () => {
-  const [hasAccount, setHasAccount] = useState(null);
-  const toast = useToast();
-  const [formState, setFormState] = useState({
+  const [hasAccount, setHasAccount] = useState<boolean | null>(null);
+    const isRunned = useRef(false);
+    const cookieAccount = hasCookie('account')
+    const toast = useToast();
+    const [formState, setFormState] = useState({
     email: '',
     lastName: '',
     firstName: '',
@@ -18,7 +20,11 @@ const SignUp = () => {
 
 
 
+
+
   useEffect(() => {
+    if(isRunned.current) return;
+    isRunned.current = true;
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code');
 
@@ -29,7 +35,7 @@ const SignUp = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          if (data.message === 'account already exists' || getCookie('account')) {
+          if (data.message === 'account already exists' || cookieAccount) {
             // set cookie with account info
             setHasAccount(true);
             setCookie('account', JSON.stringify(data.account));
@@ -41,11 +47,13 @@ const SignUp = () => {
               duration: 3000,
               isClosable: true,
             });
+          } else {
+            setHasAccount(false);
+            setFormState({ ...formState, accessToken: data.access_token });
+            sessionStorage.setItem('access_token', data.access_token);
+            sessionStorage.setItem('token_type', data.token_type);
+            sessionStorage.setItem('scope', data.scope);
           }
-          setFormState({ ...formState, accessToken: data.access_token });
-          sessionStorage.setItem('access_token', data.access_token);
-          sessionStorage.setItem('token_type', data.token_type);
-          sessionStorage.setItem('scope', data.scope);
         })
         .catch((err) => console.log(err));
     }
@@ -87,17 +95,18 @@ const SignUp = () => {
       });
     }
   };
-    if (!hasAccount) return
-  (
-    <Flex align='center' justify='center' w='100vw' h='full'>
-      <Spinner
-        speed='0.65s'
-        emptyColor='gray.700'
-        color='gray.700'
-        size='xl'
-    />
-    </Flex>
-  );
+
+  if(hasAccount === null) {
+    return(
+        <Flex align='center' justify='center' h='100%'>
+            <Spinner
+                speed='0.65s'
+                emptyColor='gray.300'
+                color='yellow.400'
+                size='xl'
+            />
+        </Flex>);
+  } else {
     return (
         <Flex h='100%' alignItems='center' justifyContent='center'>
             <Flex direction='column' background='gray.200' p={10} rounded={6}>
@@ -155,6 +164,7 @@ const SignUp = () => {
             </Flex>
         </Flex>
     );
+  }
 };
 
 export default SignUp;
