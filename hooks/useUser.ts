@@ -1,5 +1,4 @@
 import { CookieValueTypes, getCookie } from "cookies-next";
-import useSWR from "swr";
 
 export type User = {
   id: number;
@@ -11,22 +10,12 @@ export type User = {
   alpaca_id: string;
 };
 
-const fetcher = async (...args: any) => {
-  const cookie: CookieValueTypes = getCookie("account");
-  if (typeof cookie !== "string") return JSON.stringify("null");
-  const jsonCookie: User = await JSON.parse(cookie);
-
-  return jsonCookie;
-};
-
 const useUser = () => {
-  const { data, error } = useSWR("/api/user", fetcher);
-  const userData = data as User;
-  return {
-    user: userData,
-    isLoading: !error && !data,
-    error: error,
-  };
+  const cookie: CookieValueTypes = getCookie("account");
+  if (typeof cookie !== "string") return null;
+  const user: User = JSON.parse(cookie);
+
+  return user;
 };
 
 export default useUser;

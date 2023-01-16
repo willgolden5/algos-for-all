@@ -50,7 +50,7 @@ const NAV_ITEMS: Array<NavItem> = [
 
 export default function NavBar() {
   const { isOpen, onToggle } = useDisclosure();
-  const { user } = useUser();
+  const user: User | null = useUser();
 
 
   const alpacaAuth = () => {
@@ -82,7 +82,7 @@ export default function NavBar() {
         <Flex flex={{ base: 1 }} justify={{ base: 'center', md: 'start' }}>
           <LinkBox>
             <LinkOverlay href='/'>
-              <Image width={24} height={24} alt={'logo'} src={cube} />
+              <Image width={36} height={36} alt={'logo'} src={cube} />
             </LinkOverlay>
           </LinkBox>
           <Flex display={{ base: 'none', md: 'flex' }} ml={10}>
@@ -122,7 +122,7 @@ const DesktopNav = () => {
   const popoverContentBgColor = useColorModeValue('white', 'gray.800');
 
   return (
-    <Stack direction={'row'} spacing={4}>
+      <Stack direction={'row'} spacing={4} align="center" justify='center'>
       {NAV_ITEMS.map((navItem) => (
         <Box key={navItem.label}>
           <Popover trigger={'hover'} placement={'bottom-start'}>

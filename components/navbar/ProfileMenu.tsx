@@ -14,7 +14,7 @@ const ProfileMenu = ({user}: ProfileMenuProps) => {
             <PopoverTrigger>
                 <Avatar
                     name={`${user.first_name} ${user.last_name}`}
-                    size="sm"
+                    size="md"
                     bg="gray.700"
                     color="white"
                     onClick={onToggle}

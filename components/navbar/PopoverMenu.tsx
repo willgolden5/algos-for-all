@@ -1,4 +1,6 @@
 import { Avatar, Box, Divider, Flex, Heading, Text } from "@chakra-ui/react"
+import { removeCookies } from "cookies-next"
+import { useRouter } from "next/router"
 import { User } from "../../hooks/useUser"
 
 type PopoverMenuProps = {
@@ -20,6 +22,13 @@ const MenuRow = ({ children, link }: { children: React.ReactNode, link: string }
 )
 
 const PopoverMenu = ({ user }: PopoverMenuProps) => {
+    const router = useRouter();
+
+    const logout = () => {
+        removeCookies('account')
+        router.push('/')
+    }
+
     return (
         <Flex direction="column" justify='center' align='center'>
             <Flex direction='row' justify='center' align='center' w='full'>
@@ -49,7 +58,7 @@ const PopoverMenu = ({ user }: PopoverMenuProps) => {
                 <Heading as='a' w='100%' fontSize='2xl'>Algorithms</Heading>
             </MenuRow>
             <Flex direction='row' justify="space-evenly" align='center' w="100%" px={4} py={4}>
-                <Text>Logout</Text>
+                <Text onClick={() => logout()}>Logout</Text>
                 <Text>Help</Text>
                 <Text>Contact</Text>
             </Flex>
