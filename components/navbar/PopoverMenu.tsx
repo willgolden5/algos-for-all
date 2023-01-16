@@ -37,11 +37,15 @@ const PopoverMenu = ({ user }: PopoverMenuProps) => {
                     size="lg"
                     bg="gray.700"
                     color="white"
-                    m={2}
+                    my={2}
+                    mr={4}
                 />
-                <Text fontSize='xl'>{`${user.first_name} ${user.last_name}`}</Text>
+                <Flex direction='column' align='left' justify='center' my={6}>
+                    <Text fontSize='xl'>{`${user.first_name} ${user.last_name}`}</Text>
+                    <Text fontSize='lg'>{`${user.email}`}</Text>
+                </Flex>
             </Flex>
-            <Divider w='100%'  />
+            <Divider w='100%' />
             <MenuRow link="#">
                 <Heading as='a' w='100%' fontSize='2xl'>Account</Heading>
             </MenuRow>
